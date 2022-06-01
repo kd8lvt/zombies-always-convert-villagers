@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "zombiesalwaysconvertvillagers",
-  "version": "1.0.0",
+  "version": "1.0.1",
 
   "name": "Zombies Always Convert Villagers",
   "description": "Makes zombies *always* convert villagers - regardless of difficulty.",
@@ -23,6 +23,7 @@
     ]
   },
   "mixins": [
+    "zombiesalwaysconvertvillagers.mixins.json"
   ],
 
   "depends": {

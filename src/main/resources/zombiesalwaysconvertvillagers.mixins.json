@@ -1,11 +1,13 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.fabricmc.example.mixin",
+  "package": "com.kd8lvt.zombiesalwaysconvertvillagers.mixins",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
   ],
   "client": [
+  ],
+  "server": [
   ],
   "injectors": {
     "defaultRequire": 1

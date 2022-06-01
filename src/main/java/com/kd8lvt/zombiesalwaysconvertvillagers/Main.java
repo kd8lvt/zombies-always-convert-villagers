@@ -2,34 +2,40 @@ package com.kd8lvt.zombiesalwaysconvertvillagers;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.mob.ZombieVillagerEntity;
+import net.minecraft.entity.*;
+import net.minecraft.entity.mob.*;
 import net.minecraft.entity.passive.VillagerEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.village.*;
+import net.minecraft.world.Difficulty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Main implements ModInitializer {
 	@Override
 	public void onInitialize() {
+		Logger logger = LoggerFactory.getLogger("zombiesalwaysconvertvillagers");
 		ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register((ServerWorld world, Entity entity, LivingEntity killedEntity) -> {
-				if (entity.getType().equals(EntityType.ZOMBIE) || entity.getType().equals(EntityType.ZOMBIE_VILLAGER) || entity.getType().equals(EntityType.DROWNED) || entity.getType().equals(EntityType.ZOMBIFIED_PIGLIN)) {
-					if (killedEntity.getType().equals(EntityType.VILLAGER)) {
-						VillagerEntity vEnt = (VillagerEntity) killedEntity;
-						VillagerData data = vEnt.getVillagerData();
-						TradeOfferList offers = vEnt.getOffers();
-						int xp = vEnt.getExperience();
+			logger.info("Difficulty: "+world.getDifficulty().name());
+			if (world.getDifficulty() == Difficulty.byName("hard")) {
+				return;
+			}
 
-						ZombieVillagerEntity zEnt = vEnt.convertTo(EntityType.ZOMBIE_VILLAGER, true);
+			if ((entity instanceof ZombieEntity) && (killedEntity instanceof VillagerEntity villagerEntity)) {
+				ZombieVillagerEntity zombieVillagerEntity = villagerEntity.convertTo(EntityType.ZOMBIE_VILLAGER, false);
+				zombieVillagerEntity.initialize(world, world.getLocalDifficulty(zombieVillagerEntity.getBlockPos()), SpawnReason.CONVERSION, new ZombieEntity.ZombieData(false, true), (NbtCompound)null);
+				zombieVillagerEntity.setVillagerData(villagerEntity.getVillagerData());
+				zombieVillagerEntity.setGossipData((NbtElement)villagerEntity.getGossip().serialize(NbtOps.INSTANCE).getValue());
+				zombieVillagerEntity.setOfferData(villagerEntity.getOffers().toNbt());
+				zombieVillagerEntity.setXp(villagerEntity.getExperience());
 
-						zEnt.setHealth(zEnt.getMaxHealth());
-						zEnt.setVillagerData(data);
-						zEnt.setOfferData(offers.toNbt());
-						zEnt.setXp(xp);
-					}
+				if (!entity.isSilent()) {
+					world.syncWorldEvent((PlayerEntity)null, 1026, entity.getBlockPos(), 0);
 				}
+			}
 		});
 	}
 }
