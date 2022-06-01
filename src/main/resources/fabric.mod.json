@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
-  "version": "${version}",
+  "id": "zombiesalwaysconvertvillagers",
+  "version": "1.0.0",
 
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Zombies Always Convert Villagers",
+  "description": "Makes zombies *always* convert villagers - regardless of difficulty.",
   "authors": [
-    "Me!"
+    "kd8lvt"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "hhttps://github.com/kd8lvt/zombies-always-convert-villagers/tree/1.18",
+    "sources": "hhttps://github.com/kd8lvt/zombies-always-convert-villagers/tree/1.18"
   },
 
   "license": "CC0-1.0",
@@ -19,11 +19,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.fabricmc.example.ExampleMod"
+      "com.kd8lvt.zombiesalwaysconvertvillagers.Main"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
   ],
 
   "depends": {
@@ -33,6 +32,5 @@
     "java": ">=17"
   },
   "suggests": {
-    "another-mod": "*"
   }
 }
